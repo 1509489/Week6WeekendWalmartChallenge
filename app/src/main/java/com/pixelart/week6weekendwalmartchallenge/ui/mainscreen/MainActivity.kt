@@ -12,7 +12,6 @@ import com.pixelart.week6weekendwalmartchallenge.databinding.ActivityMainBinding
 import com.pixelart.week6weekendwalmartchallenge.di.ApplicationModule
 import com.pixelart.week6weekendwalmartchallenge.di.DaggerApplicationComponent
 import com.pixelart.week6weekendwalmartchallenge.di.NetworkModule
-import com.pixelart.week6weekendwalmartchallenge.model.ApiResponse
 import com.pixelart.week6weekendwalmartchallenge.model.Item
 import com.pixelart.week6weekendwalmartchallenge.model.Product
 import com.pixelart.week6weekendwalmartchallenge.ui.detailscreen.DetailActivity
@@ -27,6 +26,7 @@ class MainActivity: BaseActivity<MainContract.Presenter> (), MainContract.View, 
     @Inject
     lateinit var mainBinder: ActivityMainBinding
 
+    private lateinit var layoutAnim: LayoutAnimationController
     private lateinit var adapter: ProductsAdapter
     private lateinit var products: ArrayList<Item>
 
@@ -34,25 +34,23 @@ class MainActivity: BaseActivity<MainContract.Presenter> (), MainContract.View, 
         super.onCreate(savedInstanceState)
         showLoadingIndicator(mainBinder.progressBar)
         presenter.getProducts()
+        layoutAnim = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_anim_fall_down)
+
+        adapter = ProductsAdapter(this)
+        mainBinder.rvProducts.layoutManager = LinearLayoutManager(this)
+        mainBinder.rvProducts.adapter = adapter
 
         products = ArrayList()
     }
 
-    override fun showProducts(apiResponse: ApiResponse) {
-        products = apiResponse.items as ArrayList<Item>
-        val layoutAnim: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_anim_fall_down)
-        adapter = ProductsAdapter(this)
-        mainBinder.rvProducts.layoutManager = LinearLayoutManager(this)
-        mainBinder.rvProducts.adapter = adapter
+    override fun showProducts(items: List<Item>) {
+        products = items as ArrayList<Item>
+
+        adapter.submitList(items)
         mainBinder.rvProducts.layoutAnimation = layoutAnim
-        adapter.submitList(apiResponse.items)
 
         if (presenter.dataLoaded())
-        {
             hideLoadingIndicator(mainBinder.progressBar)
-        }
-
-        adapter
 
     }
 

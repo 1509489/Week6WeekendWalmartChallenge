@@ -19,7 +19,7 @@ class MainPresenter @Inject constructor(private val view: MainContract.View, pri
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : SingleObserver<ApiResponse>{
                 override fun onSuccess(t: ApiResponse) {
-                    view.showProducts(t.items)
+                    view.showProducts(t.items!!)
                 }
 
                 override fun onSubscribe(d: Disposable) {

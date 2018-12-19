@@ -5,5 +5,5 @@ data class ApiResponse(
     val format: String,
     val nextPage: String,
     val totalPages: String,
-    val items: List<Item>
+    var items: List<Item>? = null
 )

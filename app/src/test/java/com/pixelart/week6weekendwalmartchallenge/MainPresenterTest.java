@@ -1,6 +1,7 @@
 package com.pixelart.week6weekendwalmartchallenge;
 
 import com.pixelart.week6weekendwalmartchallenge.model.ApiResponse;
+import com.pixelart.week6weekendwalmartchallenge.model.Item;
 import com.pixelart.week6weekendwalmartchallenge.remote.NetworkService;
 import com.pixelart.week6weekendwalmartchallenge.ui.mainscreen.MainContract;
 import com.pixelart.week6weekendwalmartchallenge.ui.mainscreen.MainPresenter;
@@ -13,8 +14,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -46,6 +51,7 @@ public class MainPresenterTest {
     @Before
     public void setup(){
         presenter = new MainPresenter(view, networkService);
+        apiResponse = new ApiResponse("", "", "", "", Collections.emptyList() );
     }
 
     @Test
@@ -53,13 +59,15 @@ public class MainPresenterTest {
         when(networkService.getProducts()).thenReturn(Single.just(apiResponse));
 
        // presenter = new MainPresenter(view, networkService);
+        presenter.getProducts();
         verify(view).showProducts(anyList());
     }
 
     @Test
     public void testApiFail(){
-        when(networkService.getProducts()).thenReturn(Single.error(new Throwable("Invalid Access")));
+        when(networkService.getProducts()).thenReturn(Single.error(new Throwable()));
        // presenter = new MainPresenter(view, networkService);
-        verify(view).showError("Invalid Access");
+        presenter.getProducts();
+        verify(view).showError("Failed to fetch data from service");
     }
 }

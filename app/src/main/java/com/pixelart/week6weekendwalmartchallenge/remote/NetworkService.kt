@@ -1,5 +1,6 @@
 package com.pixelart.week6weekendwalmartchallenge.remote
 
+
 import com.pixelart.week6weekendwalmartchallenge.common.RELATIVE_URL
 import com.pixelart.week6weekendwalmartchallenge.model.ApiResponse
 import io.reactivex.Single
